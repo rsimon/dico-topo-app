@@ -108,7 +108,7 @@ class DicotopoDocsApp extends React.Component {
                                         </thead>
                                         <tbody>
                                         {feat.attributes.examples.map(ex => (<tr key={ex.content}>
-                                            <td>{ex.description}</td>
+                                            <td dangerouslySetInnerHTML={{__html: ex.description}}></td>
                                             <td><a href={ex.content}>{ex.content}</a></td>
                                         </tr>))}
                                         </tbody>

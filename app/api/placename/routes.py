@@ -13,3 +13,5 @@ def register_placename_api_urls(app):
     registrar.register_relationship_get_route(PlacenameFacade, 'linked-placenames')
     registrar.register_relationship_get_route(PlacenameFacade, 'old-labels')
     registrar.register_relationship_get_route(PlacenameFacade, 'alt-labels')
+    registrar.register_relationship_get_route(PlacenameFacade, 'feature-types')
+

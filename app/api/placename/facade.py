@@ -1,4 +1,5 @@
 from app.api.abstract_facade import JSONAPIAbstractFacade
+from app.api.feature_type.facade import FeatureTypeFacade
 
 
 class PlacenameFacade(JSONAPIAbstractFacade):
@@ -45,7 +46,13 @@ class PlacenameFacade(JSONAPIAbstractFacade):
         -------
             A dict describing the corresponding JSONAPI resource object
         """
-
+        if self.obj.commune:
+            co = self.obj.commune
+        elif self.obj.localization_commune:
+            co = self.obj.localization_commune
+        else:
+            co = None
+            
         res = {
             **self.resource_identifier,
             "attributes": {
@@ -55,8 +62,15 @@ class PlacenameFacade(JSONAPIAbstractFacade):
                 "desc": self.obj.desc,
                 "num-start-page": self.obj.num_start_page,
                 "localization-certainty": self.obj.localization_certainty,
-                "localization-insee-code": self.obj.commune_insee_code if self.obj.commune_insee_code else self.obj.localization_commune_insee_code,
-                "comment": self.obj.comment
+                "localization-insee-code": co.id if co else None,
+
+                'geoname-id': co.geoname_id if co else None,
+                'wikidata-item-id': co.wikidata_item_id if co else None,
+                'wikipedia-url': co.wikipedia_url if co else None,
+                'databnf-ark': co.databnf_ark if co else None,
+                'viaf-id': co.viaf_id if co else None,
+
+                "comment": self.obj.comment,
             },
             "meta": self.meta,
             "links": {
@@ -84,6 +98,7 @@ class PlacenameFacade(JSONAPIAbstractFacade):
             "linked-placenames": (PlacenameFacade, True),
             "alt-labels": (PlacenameAltLabelFacade, True),
             "old-labels": (PlacenameOldLabelFacade, True),
+            "feature-types": (FeatureTypeFacade, True),
         }.items():
             u_rel_name = rel_name.replace("-", "_")
 
@@ -113,8 +128,14 @@ class PlacenameFacade(JSONAPIAbstractFacade):
             "arr-id": co.arrondissement.id if co and co.arrondissement else None,
             "ct-id": co.canton.id if co and co.canton else None,
 
+            'geoname-id': co.geoname_id if co else None,
+            'wikidata-item-id': co.wikidata_item_id if co else None,
+            'wikipedia-url': co.wikipedia_url if co else None,
+            'databnf-ark': co.databnf_ark if co else None,
+            'viaf-id': co.viaf_id if co else None,
+
             "old-labels": [ol.rich_label for ol in self.obj.old_labels],
-            #"alt-labels": [al.label for al in self.obj.alt_labels]
+            "alt-labels": [al.label for al in self.obj.alt_labels]
 
         }
         return [{"id": self.obj.id, "index": self.get_index_name(), "payload": payload}]
@@ -144,7 +165,13 @@ class PlacenameSearchFacade(PlacenameFacade):
                 "dpt": self.obj.dpt,
                 "region": co.region.label if co else None,
                 "longlat": co.longlat if co else None,
-                "desc": self.obj.desc
+                "desc": self.obj.desc,
+
+                'geoname-id': co.geoname_id if co else None,
+                'wikidata-item-id': co.wikidata_item_id if co else None,
+                'wikipedia-url': co.wikipedia_url if co else None,
+                'databnf-ark': co.databnf_ark if co else None,
+                'viaf-id': co.viaf_id if co else None,
             },
             "links": {
                 "self": self.self_link

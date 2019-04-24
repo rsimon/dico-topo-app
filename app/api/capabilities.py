@@ -38,6 +38,24 @@ def api_get_capabilities(api_version):
                 }
             },
             {
+                "type": "feature",
+                "id": "export to Linked Places",
+                "attributes": {
+                    "title": "Export vers Linkedplaces",
+                    "content": "L'API permet d'exporter une resource ou une collection de ressources de type Placename vers le format <a href='https://github.com/LinkedPasts/linked-places'>Linked Places</a>",
+                    "examples": [
+                        {
+                            "description": "export d'un toponyme au format Linked Places",
+                            "content": "%s/placenames/DT02-03644?export=linkedplaces" % url_prefix
+                        },
+                        {
+                            "description": "export d'une collection de toponymes au format Linked Places",
+                            "content": "%s/placenames?page[size]=5&without-relationships&export=linkedplaces" % url_prefix
+                        }
+                    ]
+                }
+            },
+            {
                 "type": "resource",
                 "id": "placename",
                 "attributes": {
@@ -69,14 +87,14 @@ def api_get_capabilities(api_version):
                         },
                         "collection": {
                             "url": "%s/placenames?page[size]=10" % url_prefix,
-                            
+
                         }
                     },
                     "examples": {
                         "url": "%s/placenames/DT80-03029" % url_prefix
                     }
                 },
-                
+
             },
 
             {
@@ -111,14 +129,14 @@ def api_get_capabilities(api_version):
                         },
                         "collection": {
                             "url": "%s/communes?page[size]=10" % url_prefix,
-                            
+
                         }
                     },
                     "examples": {
                         "url": "%s/communes/01025" % url_prefix
                     }
                 },
-                
+
             },
 
             {
@@ -140,14 +158,14 @@ def api_get_capabilities(api_version):
                         },
                         "collection": {
                             "url": "%s/feature-types?page[size]=10" % url_prefix,
-                            
+
                         }
                     },
                     "examples": {
                         "url": "%s/feature-types/124" % url_prefix
                     }
                 },
-                
+
             },
 
             {
@@ -174,14 +192,14 @@ def api_get_capabilities(api_version):
                         },
                         "collection": {
                             "url": "%s/insee-refs?page[size]=10" % url_prefix,
-                            
+
                         }
                     },
                     "examples": {
                         "url": "%s/insee-refs/DEP_03" % url_prefix
                     }
                 },
-                
+
             },
 
             {
@@ -212,14 +230,14 @@ def api_get_capabilities(api_version):
                         },
                         "collection": {
                             "url": "%s/placename-old-labels?page[size]=10" % url_prefix,
-                            
+
                         }
                     },
                     "examples": {
                         "url": "%s/placename-old-labels/93" % url_prefix
                     }
                 },
-                
+
             },
 
             {
@@ -241,14 +259,14 @@ def api_get_capabilities(api_version):
                         },
                         "collection": {
                             "url": "%s/placename-alt-labels?page[size]=10" % url_prefix,
-                            
+
                         }
                     },
                     "examples": {
                         "url": "%s/placename-alt-labels/24" % url_prefix
                     }
                 },
-                
+
             },
         ]
 
