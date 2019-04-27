@@ -181,7 +181,7 @@ class PlacenameOldLabelSearchFacade(PlacenameOldLabelFacade):
                 "dpt": self.obj.placename.dpt,
                 "region": co.region.label if co else None,
                 "longlat": co.longlat if co else None,
-                "label": self.obj.rich_label,
+                "rich-label": self.obj.rich_label,
                 "text-label-node": self.obj.text_label_node,
                 "rich-date": self.obj.rich_date,
                 "rich-reference": self.obj.rich_reference
