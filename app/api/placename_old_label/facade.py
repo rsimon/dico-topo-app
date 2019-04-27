@@ -1,3 +1,5 @@
+from flask import current_app
+
 from app.api.abstract_facade import JSONAPIAbstractFacade
 
 
@@ -111,24 +113,78 @@ class PlacenameOldLabelFacade(JSONAPIAbstractFacade):
             }
         }
 
+    @classmethod
+    def get_index_name(cls):
+        """
+        index the old labels along the placenames
+        :return:
+        """
+        from app.api.placename.facade import PlacenameFacade
+        return "{prefix}__{env}__{index_name}".format(
+            prefix=current_app.config.get("INDEX_PREFIX", ""),
+            env=current_app.config.get("ENV"),
+            index_name=PlacenameFacade.TYPE_PLURAL
+        )
+
+    def get_data_to_index_when_added(self, propagate):
+        if self.obj.placename.commune:
+            co = self.obj.placename.commune
+        elif self.obj.placename.localization_commune:
+            co = self.obj.placename.localization_commune
+        else:
+            co = None
+
+        payload = {
+            "id": self.obj.id,
+            "type": self.TYPE,
+
+            "label": self.obj.placename.label,
+            "localization-insee-code": co.id if co else None,
+
+            "dep-id": self.obj.placename.dpt,
+            "reg-id": co.region.id if co and co.region else None,
+
+            "old-labels": [self.obj.rich_label],
+            "alt-labels": []
+
+        }
+        return [{"id": self.obj.id, "index": self.get_index_name(), "payload": payload}]
+
+    def get_data_to_index_when_removed(self, propagate):
+        print("GOING TO BE REMOVED FROM INDEX:", [{"id": self.obj.id, "index": self.get_index_name()}])
+        from app.api.placename.facade import PlacenameFacade
+        return [
+            {"id": self.obj.placename.id, "index": PlacenameFacade.get_index_name()},
+            {"id": self.obj.id, "index": self.get_index_name()}
+        ]
+
 
 class PlacenameOldLabelSearchFacade(PlacenameOldLabelFacade):
 
     @property
     def resource(self):
         """ """
-        co = self.obj.placename.localization_commune
+        if self.obj.placename.commune:
+            co = self.obj.placename.commune
+        elif self.obj.placename.localization_commune:
+            co = self.obj.placename.localization_commune
+        else:
+            co = None
+
         res = {
             **self.resource_identifier,
             "attributes": {
                 "placename-id": self.obj.placename.id,
                 "placename-label": self.obj.placename.label,
+                "placename-desc": self.obj.placename.desc,
                 "localization-insee-code": co.id if co else None,
                 "dpt": self.obj.placename.dpt,
                 "region": co.region.label if co else None,
                 "longlat": co.longlat if co else None,
-                "rich-label": self.obj.rich_label,
+                "label": self.obj.rich_label,
+                "text-label-node": self.obj.text_label_node,
                 "rich-date": self.obj.rich_date,
+                "rich-reference": self.obj.rich_reference
             },
             "links": {
                 "self": self.self_link
@@ -146,12 +202,11 @@ class PlacenameOldLabelMapFacade(PlacenameOldLabelSearchFacade):
     @property
     def resource(self):
         """ """
-        co = self.obj.placename.localization_commune
         res = {
             **self.resource_identifier,
             "attributes": {
-                "localization-insee-code": co.id if co else None,
-                "longlat": co.longlat if co else None,
+                "placename-id": self.obj.placename.id,
+                "longlat": self.obj.longlat
             },
             "links": {
                 "self": self.self_link

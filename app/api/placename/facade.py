@@ -52,7 +52,7 @@ class PlacenameFacade(JSONAPIAbstractFacade):
             co = self.obj.localization_commune
         else:
             co = None
-            
+
         res = {
             **self.resource_identifier,
             "attributes": {
@@ -60,6 +60,8 @@ class PlacenameFacade(JSONAPIAbstractFacade):
                 "country": self.obj.country,
                 "dpt": self.obj.dpt,
                 "desc": self.obj.desc,
+                "comment": self.obj.comment,
+
                 "num-start-page": self.obj.num_start_page,
                 "localization-certainty": self.obj.localization_certainty,
                 "localization-insee-code": co.id if co else None,
@@ -69,8 +71,6 @@ class PlacenameFacade(JSONAPIAbstractFacade):
                 'wikipedia-url': co.wikipedia_url if co else None,
                 'databnf-ark': co.databnf_ark if co else None,
                 'viaf-id': co.viaf_id if co else None,
-
-                "comment": self.obj.comment,
             },
             "meta": self.meta,
             "links": {
@@ -125,17 +125,17 @@ class PlacenameFacade(JSONAPIAbstractFacade):
 
             "dep-id": self.obj.dpt,
             "reg-id": co.region.id if co and co.region else None,
-            "arr-id": co.arrondissement.id if co and co.arrondissement else None,
-            "ct-id": co.canton.id if co and co.canton else None,
+            #"#arr-id": co.arrondissement.id if co and co.arrondissement else None,
+            #"ct-id": co.canton.id if co and co.canton else None,
 
-            'geoname-id': co.geoname_id if co else None,
-            'wikidata-item-id': co.wikidata_item_id if co else None,
-            'wikipedia-url': co.wikipedia_url if co else None,
-            'databnf-ark': co.databnf_ark if co else None,
-            'viaf-id': co.viaf_id if co else None,
+            #'geoname-id': co.geoname_id if co else None,
+            #'wikidata-item-id': co.wikidata_item_id if co else None,
+            #'wikipedia-url': co.wikipedia_url if co else None,
+            #'databnf-ark': co.databnf_ark if co else None,
+            #'viaf-id': co.viaf_id if co else None,
 
-            "old-labels": [ol.rich_label for ol in self.obj.old_labels],
-            "alt-labels": [al.label for al in self.obj.alt_labels]
+            #"old-labels": [ol.rich_label for ol in self.obj.old_labels],
+            #"alt-labels": [al.label for al in self.obj.alt_labels]
 
         }
         return [{"id": self.obj.id, "index": self.get_index_name(), "payload": payload}]
@@ -143,6 +143,7 @@ class PlacenameFacade(JSONAPIAbstractFacade):
     def get_data_to_index_when_removed(self, propagate):
         print("GOING TO BE REMOVED FROM INDEX:", [{"id": self.obj.id, "index": self.get_index_name()}])
         return [{"id": self.obj.id, "index": self.get_index_name()}]
+
 
 
 class PlacenameSearchFacade(PlacenameFacade):
@@ -166,6 +167,8 @@ class PlacenameSearchFacade(PlacenameFacade):
                 "region": co.region.label if co else None,
                 "longlat": co.longlat if co else None,
                 "desc": self.obj.desc,
+                "comment": self.obj.comment,
+                "num-start-page": self.obj.num_start_page,
 
                 'geoname-id': co.geoname_id if co else None,
                 'wikidata-item-id': co.wikidata_item_id if co else None,
