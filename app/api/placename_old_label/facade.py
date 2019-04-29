@@ -138,15 +138,13 @@ class PlacenameOldLabelFacade(JSONAPIAbstractFacade):
             "id": self.obj.id,
             "type": self.TYPE,
 
-            "label": self.obj.placename.label,
+            #"label": self.obj.placename.label,
             "localization-insee-code": co.id if co else None,
 
             "dep-id": self.obj.placename.dpt,
             "reg-id": co.region.id if co and co.region else None,
 
             "old-labels": [self.obj.rich_label],
-            "alt-labels": []
-
         }
         return [{"id": self.obj.id, "index": self.get_index_name(), "payload": payload}]
 
@@ -184,7 +182,13 @@ class PlacenameOldLabelSearchFacade(PlacenameOldLabelFacade):
                 "rich-label": self.obj.rich_label,
                 "text-label-node": self.obj.text_label_node,
                 "rich-date": self.obj.rich_date,
-                "rich-reference": self.obj.rich_reference
+                "rich-reference": self.obj.rich_reference,
+
+                'geoname-id': co.geoname_id if co else None,
+                'wikidata-item-id': co.wikidata_item_id if co else None,
+                'wikipedia-url': co.wikipedia_url if co else None,
+                'databnf-ark': co.databnf_ark if co else None,
+                'viaf-id': co.viaf_id if co else None,
             },
             "links": {
                 "self": self.self_link
